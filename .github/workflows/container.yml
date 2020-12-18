@@ -1,10 +1,9 @@
-name: deploy-container1
+name: deploy-container
 
 on:
   push:
     branches:
       - master
-      - main
     paths:
       - 'packages/container/**'
 
@@ -21,9 +20,11 @@ jobs:
       - run: npm install
       - run: npm run build
 
-      - uses: aws-actions/configure-aws-credentials@v1
+      - name: ACTIONS_ALLOW_UNSECURE_COMMANDS
+        run: echo 'ACTIONS_ALLOW_UNSECURE_COMMANDS=true' >> $GITHUB_ENV
+
+      - uses: chrislennon/action-aws-cli@v1.1
       - run: aws s3 sync dist s3://${{secrets.AWS_S3_BUCKET_NAME}}/container/latest
         env:
-          ACTIONS_ALLOW_UNSECURE_COMMANDS: 'true'
           AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
           AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
