@@ -1,9 +1,11 @@
 name: deploy-container
 
 on:
+  workflow_dispatch:
+
   push:
     branches:
-      - master
+      - main
     paths:
       - 'packages/container/**'
 
